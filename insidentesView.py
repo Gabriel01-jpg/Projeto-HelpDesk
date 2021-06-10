@@ -131,7 +131,7 @@ class IncidentesView:
         self._on_mostrar_opcoes()
 
 
-    def fLimparTela(self):
+    def fLimparTelaButton(self):
         self._on_mostrar_opcoes(2)
         self.selecionarCliente.delete(0, tk.END)
         self.selecionarProduto.delete(0, tk.END)
@@ -139,6 +139,11 @@ class IncidentesView:
         self.chamadoEdit.delete(0, tk.END)
         self.IncidenteList.delete(*self.IncidenteList.get_children())
         self.carregar_dados_iniciais_treeView()
+        
+    def fLimparTela(self):
+        self.selecionarCliente.delete(0, tk.END)
+        self.selecionarProduto.delete(0, tk.END)
+        self.descricaoEdit.delete('1.0', tk.END)
     
     def _on_cadastrar_clicked(self):
         selecao = True if self.selecionarCliente.get() == '' else False
@@ -165,24 +170,11 @@ class IncidentesView:
         self.selecionarProduto.set('')
         self.descricaoEdit.delete("1.0", tk.END)
 
+    def lerCampos():
+        pass
+
     def _on_atualizar_clicked(self):
         pass
-        # linhaSelecionada = self.IncidenteList.selection()
-        # if len(linhaSelecionada) != 0:
-        #     nome = self.nomeEdit.get()
-        #     id = self.IncidenteList.item(linhaSelecionada[0])['values'][0]
-
-        #     if self.IncidenteCRUD.atualizar(id, nome):
-        #         self.IncidenteList.item(
-        #             self.IncidenteList.focus(), values=(str(id), nome))
-
-        #         mb.showinfo("Mensagem", "Alteração executada com sucesso.")
-        #         self.nomeEdit.delete(0, tk.END)
-        #     else:
-        #         mb.showinfo("Mensagem", "Erro na alteração.")
-        #         self.nomeEdit.focus_set()
-        #     self.IncidenteList.selection_remove(
-        #         self.IncidenteList.selection())
 
     def _on_deletar_clicked(self):
         pass

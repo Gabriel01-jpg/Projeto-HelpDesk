@@ -62,22 +62,16 @@ class Incidentes:
         conexao.close()
         return resultset[0]
 
-    def atualizar(self, idIncidente, fk_idCliente, fk_idProduto, descricaoIncidente, dataAberturaIncidente, statusIncidente, descricaoResolucao):
+    def atualizar(self, idIncidente, descricaoIncidente):
         try:
             conn = Conexao()
             conexao = conn.conectar()
             cursor = conexao.cursor()
 
-            sql = """UPDATE Incidentes
-                    SET fk_idCliente = ?
-                        ,fk_idProduto= ?
-                        ,descricaoIncidente = ?
-                        ,dataAberturaIncidente = ?
-                        ,statusIncidente = ?
-                        ,descricaoResolucao = ?
-                    WHERE idIncidente = (?)"""
-            cursor.execute(sql, fk_idCliente, fk_idProduto, descricaoIncidente,
-                           dataAberturaIncidente, statusIncidente, descricaoResolucao, idIncidente)
+            
+            cursor.execute("""UPDATE Incidentes
+                    SET descricaoIncidente = ?
+                    WHERE idIncidente = (?)""", (descricaoIncidente, idIncidente))
 
             conexao.commit()
             cursor.close()
