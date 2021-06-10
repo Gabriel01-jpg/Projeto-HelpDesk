@@ -1,8 +1,9 @@
 import datetime
-from tkinter.constants import BROWSE, CENTER, CHAR, END, INSERT, LEFT, NW
+from tkinter.constants import ACTIVE, BROWSE, CENTER, CHAR, DISABLED, END, INSERT, LEFT, NW
 from incidentes import Incidentes
 
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox as mb
 
@@ -15,23 +16,32 @@ class IncidentesView:
         self.chamadoLabel = tk.Label(win, text='N° Chamado')
         self.usuarioLabel = tk.Label(win, text='Usuário:')
         self.produtoLabel = tk.Label(win, text='Produto:')
-        self.descricaoLabel = tk.Label(win, text='Descrição:')
-        self.chamadoEdit = tk.Entry(width=28, bd=3)
-        self.descricaoEdit = tk.Text(width=44, bd=3, )
-        self.selecionarCliente = ttk.Combobox(win, width=45)
+        self.descricaoLabel = tk.Label(win, text='Descrição\n do \n problema:')
+        self.statusLabel = tk.Label(win, text="Situação: ")
+        self.solucaoLabel = tk.Label(win, text="Solução \n do \n problema: ", state=DISABLED)
+        self.chamadoEdit = tk.Entry(width=30, bd=3)
+        self.descricaoEdit = tk.Text(width=50, bd=3, )
+        self.solucaoEdit = tk.Text(width=50, bd=3, state=DISABLED)
+        self.selecionarCliente = ttk.Combobox(win, width=45) 
         self.selecionarProduto = ttk.Combobox(win, width=45)
         self.selecaoTTK = 0
         self.dictClientes = {}
         self.dictProdutos = {}
+        self.var = IntVar()
 
+        self.btnLimpar = tk.Button(win, text='Limpar', width=8, command=self.fLimparTela) 
         self.btnCadastrar = tk.Button(
-            win, text='Cadastrar', width=7, command=self._on_cadastrar_clicked)
+            win, text='Cadastrar', width=8, command=self._on_cadastrar_clicked)
         self.btnPesquisar = tk.Button(
-            win, text='Pesquisar', width=9, command=self._on_pesquisar_id)
+            win, text='Pesquisar', width=10, command=self._on_pesquisar_id)
         self.btnAlterar = tk.Button(
-            win, text='Alterar', width=7, command=self._on_atualizar_clicked)
+            win, text='Alterar', width=8, command=self._on_atualizar_clicked)
         self.btnExcluir = tk.Button(
-            win, text='Excluir', width=7, command=self._on_deletar_clicked)
+            win, text='Excluir', width=8, command=self._on_deletar_clicked)
+        self.statusRBAtivo = tk.Radiobutton(
+            win, text="Aberto", value=1, variable=self.var)  # variable=tk.IntVar())
+        self.statusRBFechado = tk.Radiobutton(
+            win, text="Fechado", value=2, variable=self.var, state=DISABLED)  # variable=tk.IntVar())
 
         self.IncidenteList = ttk.Treeview(
             win,
@@ -51,11 +61,11 @@ class IncidentesView:
         self.IncidenteList.heading(5, text="Descrição Incidente")
         self.IncidenteList['displaycolumns'] = (1, 2, 3, 4)
 
-        self.IncidenteList.column(1, minwidth=0, width=130)
-        self.IncidenteList.column(2, minwidth=0, width=162)
-        self.IncidenteList.column(3, minwidth=0, width=140)
-        self.IncidenteList.column(4, minwidth=0, width=130)
-        self.IncidenteList.column(5, minwidth=0, width=130)
+        self.IncidenteList.column(1, minwidth=0, width=150)
+        self.IncidenteList.column(2, minwidth=0, width=172)
+        self.IncidenteList.column(3, minwidth=0, width=160)
+        self.IncidenteList.column(4, minwidth=0, width=150)
+        self.IncidenteList.column(5, minwidth=0, width=150)
 
         self.IncidenteList.pack()
         self.IncidenteList.bind("<<TreeviewSelect>>",
@@ -64,19 +74,26 @@ class IncidentesView:
         self.chamadoLabel.place(x=10, y=10)
         self.usuarioLabel.place(x=10, y=180)
         self.produtoLabel.place(x=10, y=225)
-        self.descricaoLabel.place(x=10, y=270)
+        self.descricaoLabel.place(x=10, y=316)
+        self.solucaoLabel.place(x=10, y=414)
+        self.statusLabel.place(x=10, y=270)
+        self.statusRBAtivo.place(x=70, y=270)
+        self.statusRBFechado.place(x=135, y=270)
         self.chamadoEdit.place(x=100, y=10)
-        self.descricaoEdit.place(x=85, y=270, height=90)
+        self.solucaoEdit.place(x=90, y=410, height=70)
+        self.descricaoEdit.place(x=90, y=310, height=80)
         self.IncidenteList.place(x=10, y=50, height=110)
-        self.verscrlbar.place(x=573, y=50, height=110)
+        self.verscrlbar.place(x=645, y=50, height=110)
         self.selecionarCliente.place(x=70, y=180, height=24)
         self.selecionarProduto.place(x=70, y=224, height=24)
-        self.btnPesquisar.place(x=349, y=10)
-        self.btnCadastrar.place(x=480, y=190)
-        self.btnAlterar.place(x=480, y=250)
-        self.btnExcluir.place(x=480, y=310)
+        self.btnPesquisar.place(x=300, y=9)
+        self.btnCadastrar.place(x=550, y=200)
+        self.btnAlterar.place(x=550, y=250)
+        self.btnExcluir.place(x=550, y=300)
+        self.btnLimpar.place(x=550, y=350)
 
         self.carregar_dados_iniciais_treeView()
+
 
     def _on_mostrar_clicked(self, event):
         selecao = self.IncidenteList.focus()[0]
@@ -95,6 +112,7 @@ class IncidentesView:
 
             self._on_mostrar_opcoes(1)
             self.selecaoTTK = chamado
+ 
 
     def carregar_dados_iniciais_treeView(self):
         insidentes = self.IncidenteCRUD.consultarListaCompleta()
@@ -112,6 +130,16 @@ class IncidentesView:
 
         self._on_mostrar_opcoes()
 
+
+    def fLimparTela(self):
+        self._on_mostrar_opcoes(2)
+        self.selecionarCliente.delete(0, tk.END)
+        self.selecionarProduto.delete(0, tk.END)
+        self.descricaoEdit.delete('1.0', tk.END)
+        self.chamadoEdit.delete(0, tk.END)
+        self.IncidenteList.delete(*self.IncidenteList.get_children())
+        self.carregar_dados_iniciais_treeView()
+    
     def _on_cadastrar_clicked(self):
         selecao = True if self.selecionarCliente.get() == '' else False
         if selecao:
@@ -174,15 +202,13 @@ class IncidentesView:
         #         self.nomeEdit.focus_set()
 
     def _on_pesquisar_id(self):
+        selecao = True if self.chamadoEdit.get() == '' else False
+        if selecao:
+            mb.showinfo("Mensagem", "Digite o código do incidente para a pesquisa.")
+            return 
         idCliente = self.chamadoEdit.get()
-
         if self.btnPesquisar['text'] == 'Pesquisar':
-            self.btnPesquisar['text'] = 'Limpar'
             insidentes = self.IncidenteCRUD.consultarListaCompleta(idCliente)
-        else:
-            self.btnPesquisar['text'] = 'Pesquisar'
-            insidentes = self.IncidenteCRUD.consultarListaCompleta()
-            self.chamadoEdit.delete(0, tk.END)
 
         self.IncidenteList.delete(*self.IncidenteList.get_children())
 
@@ -203,10 +229,17 @@ class IncidentesView:
             self.selecionarProduto.set('')
             self.selecionarCliente['state'] = 'disable'
             self.selecionarProduto['state'] = 'disable'
+            self.solucaoLabel['state'] = 'normal'
+            self.solucaoEdit['state'] = 'normal'
+            self.statusRBFechado['state'] = 'normal'
             return
         elif lista == 2:
             self.selecionarCliente['state'] = 'normal'
             self.selecionarProduto['state'] = 'normal'
+            self.solucaoLabel['state'] = 'disable'
+            self.solucaoEdit['state'] = 'disable'
+            self.statusRBFechado['state'] = 'disable'
+
         else:
             listaClientes = self.IncidenteCRUD.consultaCliente()
             listaProdutos = self.IncidenteCRUD.consultaProduto()
@@ -226,10 +259,12 @@ class IncidentesView:
                 self.selecionarProduto['values'] = (
                     *self.selecionarProduto['values'], produto)
             self.dictProdutos = dict(lProdutos)
-
+            
+            
 
 janela = tk.Tk()
 principal = IncidentesView(janela)
 janela.title('Cadastro de Chamados Técnicos')
-janela.geometry("598x410+0+0")
+janela.geometry("690x510+0+0")
+janela.resizable(False, False)
 janela.mainloop()
