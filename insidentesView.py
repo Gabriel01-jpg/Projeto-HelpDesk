@@ -29,7 +29,7 @@ class IncidentesView:
         self.dictProdutos = {}
         self.var = IntVar()
 
-        self.btnLimpar = tk.Button(win, text='Limpar', width=8, command=self.fLimparTela) 
+        self.btnLimpar = tk.Button(win, text='Limpar', width=8, command=self.fLimparTelaButton) 
         self.btnCadastrar = tk.Button(
             win, text='Cadastrar', width=8, command=self._on_cadastrar_clicked)
         self.btnPesquisar = tk.Button(
@@ -132,6 +132,7 @@ class IncidentesView:
 
 
     def fLimparTelaButton(self):
+        self.solucaoEdit.delete('1.0', END)
         self._on_mostrar_opcoes(2)
         self.selecionarCliente.delete(0, tk.END)
         self.selecionarProduto.delete(0, tk.END)
@@ -174,7 +175,23 @@ class IncidentesView:
         pass
 
     def _on_atualizar_clicked(self):
-        pass
+         linhaSelecionada = self.IncidenteList.selection()
+         if len(linhaSelecionada) != 0:
+            descricaoIncidente = self.descricaoEdit.get("1.0", END)
+            descricaoResolucao = str(self.solucaoEdit.get("1.0", END))
+            selecao = self.IncidenteList.focus()[0]
+            item = self.IncidenteList.item(selecao, 'values')
+            id = item[0]
+
+            if self.IncidenteCRUD.atualizar(id, descricaoIncidente, descricaoResolucao):
+                self.IncidenteList.item(
+                    self.IncidenteList.focus(), values=(str(id), descricaoIncidente, descricaoResolucao))
+
+                mb.showinfo("Mensagem", "Alteração executada com sucesso.")
+                self.fLimparTelaButton()
+                
+            else:
+                mb.showinfo("Mensagem", "Erro na alteração.")
 
     def _on_deletar_clicked(self):
         pass

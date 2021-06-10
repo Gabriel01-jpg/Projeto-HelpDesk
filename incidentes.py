@@ -62,7 +62,7 @@ class Incidentes:
         conexao.close()
         return resultset[0]
 
-    def atualizar(self, idIncidente, descricaoIncidente):
+    def atualizar(self, idIncidente, descricaoIncidente, descricaoResolucao):
         try:
             conn = Conexao()
             conexao = conn.conectar()
@@ -70,14 +70,16 @@ class Incidentes:
 
             
             cursor.execute("""UPDATE Incidentes
-                    SET descricaoIncidente = ?
-                    WHERE idIncidente = (?)""", (descricaoIncidente, idIncidente))
+                    SET descricaoIncidente = ?,
+                    descricaoResolucao = ?
+                    WHERE idIncidente = (?)""", (descricaoIncidente, descricaoResolucao, idIncidente))
 
             conexao.commit()
             cursor.close()
             conexao.close()
 
             return True
+        
         except sqlite3.OperationalError as e:
             print("Erro na atualização dos Incidentes: {}".format(e))
             return False
