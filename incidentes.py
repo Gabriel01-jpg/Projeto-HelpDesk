@@ -62,7 +62,7 @@ class Incidentes:
         conexao.close()
         return resultset[0]
 
-    def atualizar(self, idIncidente, descricaoIncidente, descricaoResolucao):
+    def atualizar(self, idIncidente, descricaoIncidente, descricaoResolucao, statusIncidente):
         try:
             conn = Conexao()
             conexao = conn.conectar()
@@ -71,8 +71,9 @@ class Incidentes:
             
             cursor.execute("""UPDATE Incidentes
                     SET descricaoIncidente = ?,
+                    statusIncidente = ?,
                     descricaoResolucao = ?
-                    WHERE idIncidente = (?)""", (descricaoIncidente, descricaoResolucao, idIncidente))
+                    WHERE idIncidente = (?)""", (descricaoIncidente, statusIncidente, descricaoResolucao, idIncidente))
 
             conexao.commit()
             cursor.close()
@@ -145,7 +146,8 @@ class Incidentes:
                 b.nomeCliente || ' ' || b.sobrenomeCliente as Solicitante,
                 strftime('%d/%m/%Y', a.dataAberturaIncidente) as Dt_Abertura,
                 a.statusincidente,
-                a.descricaoIncidente
+                a.descricaoIncidente,
+                a.descricaoResolucao
             FROM Incidentes as a,
                 Clientes as b,
                 Produtos as c
@@ -160,7 +162,8 @@ class Incidentes:
                 b.nomeCliente || ' ' || b.sobrenomeCliente as Solicitante,
                 strftime('%d/%m/%Y', a.dataAberturaIncidente) as Dt_Abertura,
                 a.statusincidente,
-                a.descricaoIncidente
+                a.descricaoIncidente,
+                a.descricaoResolucao
             FROM Incidentes as a,
                 Clientes as b,
                 Produtos as c

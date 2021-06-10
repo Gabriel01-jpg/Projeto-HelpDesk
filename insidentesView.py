@@ -1,3 +1,11 @@
+'''
+** Feito por:
+Gabriel Lima da Silva - 202002690208
+        e
+Walles
+
+'''
+
 import datetime
 from tkinter.constants import ACTIVE, BROWSE, CENTER, CHAR, DISABLED, END, INSERT, LEFT, NW
 from incidentes import Incidentes
@@ -27,7 +35,8 @@ class IncidentesView:
         self.selecaoTTK = 0
         self.dictClientes = {}
         self.dictProdutos = {}
-        self.var = IntVar()
+        self.OpcoesNaoDuplica = 1
+        self.var = StringVar()
 
         self.btnLimpar = tk.Button(win, text='Limpar', width=8, command=self.fLimparTelaButton) 
         self.btnCadastrar = tk.Button(
@@ -38,14 +47,14 @@ class IncidentesView:
             win, text='Alterar', width=8, command=self._on_atualizar_clicked)
         self.btnExcluir = tk.Button(
             win, text='Excluir', width=8, command=self._on_deletar_clicked)
-        self.statusRBAtivo = tk.Radiobutton(
-            win, text="Aberto", value=1, variable=self.var)  # variable=tk.IntVar())
+        self.statusRBAberto = tk.Radiobutton(
+            win, text="Aberto", value="Aberto", variable=self.var)  # variable=tk.IntVar())
         self.statusRBFechado = tk.Radiobutton(
-            win, text="Fechado", value=2, variable=self.var, state=DISABLED)  # variable=tk.IntVar())
+            win, text="Fechado", value="Fechado", variable=self.var, state=DISABLED)  # variable=tk.IntVar())
 
         self.IncidenteList = ttk.Treeview(
             win,
-            columns=(1, 2, 3, 4, 5),
+            columns=(1, 2, 3, 4, 5, 6),
             show='headings',
             selectmode="browse",
         )
@@ -59,6 +68,7 @@ class IncidentesView:
         self.IncidenteList.heading(3, text="Data de Abertura")
         self.IncidenteList.heading(4, text="Status")
         self.IncidenteList.heading(5, text="Descrição Incidente")
+        self.IncidenteList.heading(6, text="Descrição Solução")
         self.IncidenteList['displaycolumns'] = (1, 2, 3, 4)
 
         self.IncidenteList.column(1, minwidth=0, width=150)
@@ -66,6 +76,7 @@ class IncidentesView:
         self.IncidenteList.column(3, minwidth=0, width=160)
         self.IncidenteList.column(4, minwidth=0, width=150)
         self.IncidenteList.column(5, minwidth=0, width=150)
+        self.IncidenteList.column(6, minwidth=0, width=150)
 
         self.IncidenteList.pack()
         self.IncidenteList.bind("<<TreeviewSelect>>",
@@ -77,7 +88,7 @@ class IncidentesView:
         self.descricaoLabel.place(x=10, y=316)
         self.solucaoLabel.place(x=10, y=414)
         self.statusLabel.place(x=10, y=270)
-        self.statusRBAtivo.place(x=70, y=270)
+        self.statusRBAberto.place(x=70, y=270)
         self.statusRBFechado.place(x=135, y=270)
         self.chamadoEdit.place(x=100, y=10)
         self.solucaoEdit.place(x=90, y=410, height=70)
@@ -96,39 +107,43 @@ class IncidentesView:
 
 
     def _on_mostrar_clicked(self, event):
-        selecao = self.IncidenteList.focus()[0]
-        item = self.IncidenteList.item(selecao, 'values')
-
-        chamado = item[0]
-        descricao = item[4]
-
-        if self.selecaoTTK == chamado:
-            self._on_mostrar_opcoes(2)
-            self.selecaoTTK = 0
-            return
+        selection = self.IncidenteList.selection()
+        item = self.IncidenteList.item(selection)
+        self._on_mostrar_opcoes(1)
+        descricaoProtudo = item["values"][4]
+        descricaoSolucao = item["values"][5]
+        situacao = item["values"][3]
+        if situacao == 'Aberto':
+            self.statusRBAberto.select()
         else:
-            self.descricaoEdit.delete("1.0", tk.END)
-            self.descricaoEdit.insert(END, descricao)
+            self.statusRBFechado.select()
+        self.descricaoEdit.delete("1.0", tk.END)
+        self.solucaoEdit.delete("1.0", tk.END)
+        self.descricaoEdit.insert("1.0", descricaoProtudo)
+        if descricaoSolucao == 'None':
+            descricaoSolucao = ''
+        self.solucaoEdit.insert("1.0", descricaoSolucao)    
 
-            self._on_mostrar_opcoes(1)
-            self.selecaoTTK = chamado
- 
 
     def carregar_dados_iniciais_treeView(self):
         insidentes = self.IncidenteCRUD.consultarListaCompleta()
 
         count = 0
+
         for item in insidentes:
             chamado = item[0]
             solicitante = item[3]
             dtAbertura = item[4]
             status = item[5]
             descricao = item[6]
+            solucao = item[7]
             self.IncidenteList.insert('', 'end', iid=count, values=(
-                chamado, solicitante, dtAbertura, status, descricao))
+                chamado, solicitante, dtAbertura, status, descricao, solucao))
             count += 1
-
-        self._on_mostrar_opcoes()
+        self.statusRBAberto.select()
+        if self.OpcoesNaoDuplica == 1:
+            self._on_mostrar_opcoes()
+            self.OpcoesNaoDuplica = 2
 
 
     def fLimparTelaButton(self):
@@ -138,13 +153,10 @@ class IncidentesView:
         self.selecionarProduto.delete(0, tk.END)
         self.descricaoEdit.delete('1.0', tk.END)
         self.chamadoEdit.delete(0, tk.END)
+        self.statusRBAberto.select()
         self.IncidenteList.delete(*self.IncidenteList.get_children())
         self.carregar_dados_iniciais_treeView()
         
-    def fLimparTela(self):
-        self.selecionarCliente.delete(0, tk.END)
-        self.selecionarProduto.delete(0, tk.END)
-        self.descricaoEdit.delete('1.0', tk.END)
     
     def _on_cadastrar_clicked(self):
         selecao = True if self.selecionarCliente.get() == '' else False
@@ -170,9 +182,8 @@ class IncidentesView:
         self.selecionarCliente.set('')
         self.selecionarProduto.set('')
         self.descricaoEdit.delete("1.0", tk.END)
+        self.fLimparTelaButton()
 
-    def lerCampos():
-        pass
 
     def _on_atualizar_clicked(self):
          linhaSelecionada = self.IncidenteList.selection()
@@ -182,10 +193,11 @@ class IncidentesView:
             selecao = self.IncidenteList.focus()[0]
             item = self.IncidenteList.item(selecao, 'values')
             id = item[0]
+            radiobutton = self.var.get()
 
-            if self.IncidenteCRUD.atualizar(id, descricaoIncidente, descricaoResolucao):
+            if self.IncidenteCRUD.atualizar(id, descricaoIncidente, descricaoResolucao, radiobutton):
                 self.IncidenteList.item(
-                    self.IncidenteList.focus(), values=(str(id), descricaoIncidente, descricaoResolucao))
+                    self.IncidenteList.focus(), values=(str(id), descricaoIncidente, descricaoResolucao, radiobutton))
 
                 mb.showinfo("Mensagem", "Alteração executada com sucesso.")
                 self.fLimparTelaButton()
@@ -194,21 +206,21 @@ class IncidentesView:
                 mb.showinfo("Mensagem", "Erro na alteração.")
 
     def _on_deletar_clicked(self):
-        pass
-        # linhaSelecionada = self.IncidenteList.selection()
+         linhaSelecionada = self.IncidenteList.selection()
 
-        # if len(linhaSelecionada) != 0:
-        #     id_dept = self.IncidenteList.item(
-        #         linhaSelecionada[0])["values"][0]
+         if len(linhaSelecionada) != 0:
+             id_dept = self.IncidenteList.item(
+                 linhaSelecionada[0])["values"][0]
 
-        #     if self.IncidenteCRUD.excluir(id_dept):
-        #         self.IncidenteList.delete(linhaSelecionada)
+             if self.IncidenteCRUD.excluir(id_dept):
+                 self.IncidenteList.delete(linhaSelecionada)
 
-        #         mb.showinfo("Mensagem", "Exclusão executada com sucesso.")
-        #         self.nomeEdit.delete(0, tk.END)
-        #     else:
-        #         mb.showinfo("Mensagem", "Erro na exclusão.")
-        #         self.nomeEdit.focus_set()
+                 mb.showinfo("Mensagem", "Exclusão executada com sucesso.")
+                 self.nomeEdit.delete(0, tk.END)
+             else:
+                 mb.showinfo("Mensagem", "Erro na exclusão.")
+                 self.nomeEdit.focus_set()
+             self.fLimparTelaButton()
 
     def _on_pesquisar_id(self):
         selecao = True if self.chamadoEdit.get() == '' else False
@@ -228,8 +240,9 @@ class IncidentesView:
             dtAbertura = item[4]
             status = item[5]
             descricao = item[6]
+            solucao = item[7]
             self.IncidenteList.insert('', 'end', iid=count, values=(
-                chamado, solicitante, dtAbertura, status, descricao))
+                chamado, solicitante, dtAbertura, status, descricao, solucao))
             count += 1
 
     def _on_mostrar_opcoes(self, lista=0):
@@ -269,8 +282,6 @@ class IncidentesView:
                     *self.selecionarProduto['values'], produto)
             self.dictProdutos = dict(lProdutos)
             
-            
-
 janela = tk.Tk()
 principal = IncidentesView(janela)
 janela.title('Cadastro de Chamados Técnicos')
