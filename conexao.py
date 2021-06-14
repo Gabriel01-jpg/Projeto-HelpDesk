@@ -1,76 +1,70 @@
 import sqlite3
 
-
 class Conexao:
+    def __init__(self):
+        self.conexao = None
+        self.dbPath = 'banco.db'
 
-    def conectar(self):
-        conexao = None
-        db_path = 'banco.db'
+    def connect(self):
         try:
-            conexao = sqlite3.connect(
-                db_path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+            self.conexao = sqlite3.connect(self.dbPath)
 
         except sqlite3.DatabaseError as err:
-            print(f"Erro ao conectar o banco de dados {db_path}.")
-        return conexao
+            print(f'Erro ao tentar conectar com o Banco de Dados! \nErro: {err}')
 
-    # def createTableDepartamento(self,conexao,cursor):
-    #     cursor.execute('DROP TABLE IF EXISTS Departamento')
+        return self.conexao
 
-    #     sql = """CREATE TABLE IF NOT EXISTS Departamento (
-    #                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #                 nome varchar NOT NULL);"""
+    def createTableClientes(self, conexao, cursor):
+        cursor.execute('DROP TABLE IF EXISTS Clientes')
 
-    #     cursor.execute(sql)
-    #     conexao.commit()
+        sql = """CREATE TABLE IF NOT EXISTS Clientes (
+            idCliente INTEGER PRIMARY KEY AUTOINCREMENT,
+            nomeCliente varchar NOT NULL,
+            sobrenomeCliente varchar,
+            CPF varchar(14) NOT NULL,
+            telefoneCliente varchar(14) NOT NULL, 
+            enderecoCliente varchar NOT NULL, 
+            emailCliente varchar NOT NULL
+        );"""
 
-    # def createTableEmpregado(self,conexao,cursor):
-    #     cursor.execute('DROP TABLE IF EXISTS Empregado')
+        cursor.execute(sql)
+        conexao.commit()
+ 
+    def createTableProdutos(self, conexao, cursor):
+        cursor.execute('DROP TABLE IF EXISTS Produtos')
 
-    #     sql = """CREATE TABLE IF NOT EXISTS Empregado (
-    #                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #                 cpf varchar NOT NULL UNIQUE,
-    #                 nome varchar NOT NULL,
-    #                 salario float NOT NULL,
-    #                 fk_Departamento_id int,
-    #                 FOREIGN KEY (fk_Departamento_id) REFERENCES Departamento (id));"""
+        sql = """CREATE TABLE IF NOT EXISTS Produtos (
+            idProduto INTEGER PRIMARY KEY AUTOINCREMENT,
+            nomeProduto varchar NOT NULL,
+            descricaoProduto varchar NOT NULL
+        );"""
+        cursor.execute(sql)
+        conexao.commit()
 
-    #     cursor.execute(sql)
-    #     conexao.commit()
+    def createTableIncidentes(self, conexao, cursor):
+        cursor.execute('DROP TABLE IF EXISTS Incidentes')
 
-    # def createTablePlantao(self,conexao,cursor):
-    #     cursor.execute('DROP TABLE IF EXISTS Plantao')
+        sql = """CREATE TABLE IF NOT EXISTS Incidentes (
+            idIncidente INTEGER PRIMARY KEY AUTOINCREMENT,
+            fk_idCliente INTEGER NOT NULL,
+            fk_idProduto INTEGER NOT NULL,
+            descricaoIncidente varchar NOT NULL, 
+            dataAberturaIncidente date NOT NULL,
+            statusIncidente varchar NOT NULL,
+            descricaoResolucao varchar,
+            FOREIGN KEY (fk_idCliente) REFERENCES Clientes(idCliente)
+            FOREIGN KEY (fk_idProduto) REFERENCES Produtos(idProduto)
+        );"""
+        cursor.execute(sql)
+        conexao.commit()
 
-    #     sql = """CREATE TABLE IF NOT EXISTS Plantao (
-    #                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #                 semana int NOT NULL,
-    #                 data date NOT NULL ,
-    #                 fk_Departamento_id int,
-    #                 UNIQUE(semana, data ,fk_Departamento_id),
-    #                 FOREIGN KEY (fk_Departamento_id) REFERENCES Departamento (id));"""
+    def createTables(self):
+        conexao = self.connect()
+        cursor = conexao.cursor()
+        self.createTableClientes(conexao, cursor)
+        self.createTableProdutos(conexao,cursor)
+        self.createTableIncidentes(conexao, cursor)
 
-    #     cursor.execute(sql)
-    #     conexao.commit()
-
-    # def createTableEscala(self,conexao,cursor):
-    #     cursor.execute('DROP TABLE IF EXISTS Escala')
-
-    #     sql = """CREATE TABLE IF NOT EXISTS Escala (
-    #                 fk_Empregado_id int,
-    #                 fk_Plantao_id int,
-    #                 hora time NOT NULL,
-    #                 presenca int,
-    #                 PRIMARY KEY (fk_Empregado_id, fk_Plantao_id, hora),
-    #                 FOREIGN KEY (fk_Empregado_id) REFERENCES Empregado (id),
-    #                 FOREIGN KEY (fk_Plantao_id) REFERENCES Plantao (id));"""
-
-    #     cursor.execute(sql)
-    #     conexao.commit()
-
-    # def createTables(self):
-    #     conexao = self.conectar()
-    #     cursor = conexao.cursor()
-    #     self.createTableDepartamento(conexao,cursor)
-    #     self.createTableEmpregado(conexao,cursor)
-    #     self.createTablePlantao(conexao,cursor)
-    #     self.createTableEscala(conexao,cursor)
+'''conexao = Conexao()
+conexao.createTables()'''
+    

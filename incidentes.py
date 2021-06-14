@@ -8,7 +8,7 @@ class Incidentes:
             self, fk_idCliente, fk_idProduto, descricaoIncidente, dataAberturaIncidente):
         try:
             conn = Conexao()
-            conexao = conn.conectar()
+            conexao = conn.connect()
             cursor = conexao.cursor()
 
             cursor.execute("""INSERT INTO Incidentes
@@ -29,7 +29,7 @@ class Incidentes:
 
     def consultar(self):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         resultset = cursor.execute('SELECT * FROM incidentes').fetchall()
@@ -40,7 +40,7 @@ class Incidentes:
 
     def consultar_detalhes(self, idIncidente):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         resultset = cursor.execute(
@@ -52,7 +52,7 @@ class Incidentes:
 
     def consultar_ultimo_id(self):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         resultset = cursor.execute(
@@ -65,7 +65,7 @@ class Incidentes:
     def atualizar(self, idIncidente, descricaoIncidente, descricaoResolucao, statusIncidente):
         try:
             conn = Conexao()
-            conexao = conn.conectar()
+            conexao = conn.connect()
             cursor = conexao.cursor()
 
             
@@ -91,7 +91,7 @@ class Incidentes:
     def excluir(self, idIncidente):
         try:
             conn = Conexao()
-            conexao = conn.conectar()
+            conexao = conn.connect()
             cursor = conexao.cursor()
 
             sql = 'DELETE FROM Incidentes WHERE idIncidente = (?)'
@@ -111,7 +111,7 @@ class Incidentes:
 
     def consultaCliente(self):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         resultset = cursor.execute(
@@ -123,7 +123,7 @@ class Incidentes:
 
     def consultaProduto(self):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         resultset = cursor.execute(
@@ -135,7 +135,7 @@ class Incidentes:
 
     def consultarListaCompleta(self, filtro='Geral'):
         conn = Conexao()
-        conexao = conn.conectar()
+        conexao = conn.connect()
         cursor = conexao.cursor()
 
         sql1 = """

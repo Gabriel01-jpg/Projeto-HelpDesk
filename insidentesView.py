@@ -2,12 +2,12 @@
 ** Feito por:
 Gabriel Lima da Silva - 202002690208
         e
-Walles
+Walles 
 
 '''
 
 import datetime
-from tkinter.constants import ACTIVE, BROWSE, CENTER, CHAR, DISABLED, END, INSERT, LEFT, NW
+from tkinter.constants import DISABLED, END
 from incidentes import Incidentes
 
 import tkinter as tk
@@ -174,6 +174,7 @@ class IncidentesView:
             self.IncidenteCRUD.cadastrar(
                 idCliente, idProduto, descricaoIncidente, dataAbertura)
             mb.showinfo("Mensagem", "Dados inseridos com sucesso!!!")
+            self.fLimparTelaButton()
         else:
             mb.showinfo(
                 "Mensagem", "Por favor preencha todos os campos e tente novamente.")
@@ -182,7 +183,7 @@ class IncidentesView:
         self.selecionarCliente.set('')
         self.selecionarProduto.set('')
         self.descricaoEdit.delete("1.0", tk.END)
-        self.fLimparTelaButton()
+        
 
 
     def _on_atualizar_clicked(self):
