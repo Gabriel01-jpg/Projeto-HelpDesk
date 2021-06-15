@@ -1,3 +1,7 @@
+#########################################
+#Feito por Davi Fabiano e Nafftaly Lopes#
+#########################################
+
 import sqlite3
 from conexao import Conexao
 
