@@ -1,3 +1,6 @@
+#########################################
+#Feito por Davi Fabiano e Gabriel
+
 import tkinter as tk
 from insidentesView import IncidentesView
 from produtosView import produtosView
