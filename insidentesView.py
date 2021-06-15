@@ -283,9 +283,9 @@ class IncidentesView:
                     *self.selecionarProduto['values'], produto)
             self.dictProdutos = dict(lProdutos)
             
-janela = tk.Tk()
+'''janela = tk.Tk()
 principal = IncidentesView(janela)
 janela.title('Cadastro de Chamados Técnicos')
 janela.geometry("690x510+0+0")
 janela.resizable(False, False)
-janela.mainloop()
+janela.mainloop()'''

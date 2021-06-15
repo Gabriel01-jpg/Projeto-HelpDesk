@@ -25,7 +25,11 @@ class Main():
         janela.mainloop()
         
     def _openIncidentes(self):
-        pass
+        windowIncidentes = tk.Tk()
+        principal = IncidentesView(windowIncidentes)
+        janela.title('Cadastro de Chamados Técnicos')
+        janela.geometry("690x510+0+0")
+        janela.mainloop()
         
 janela=tk.Tk()
 janela.title('Main')

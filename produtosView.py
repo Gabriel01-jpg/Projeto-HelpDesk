@@ -146,8 +146,8 @@ class produtosView:
         self.descricaoEdit.insert("1.0", descricaoProtudo)
 
 
-janela = tk.Tk()
+'''janela = tk.Tk()
 principal = produtosView(janela)
 janela.title("Cadastro de Departamento")
 janela.geometry("800x600+0+0")
-janela.mainloop()
+janela.mainloop()'''
