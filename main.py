@@ -1,5 +1,6 @@
 #########################################
-#Feito por Davi Fabiano e Gabriel
+##Feito por Davi Fabiano e Gabriel Lima##
+#########################################
 
 import tkinter as tk
 from insidentesView import IncidentesView
