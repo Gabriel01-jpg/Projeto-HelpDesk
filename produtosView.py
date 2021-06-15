@@ -1,3 +1,7 @@
+#########################################
+#Feito por Davi Fabiano e Nafftaly Lopes#
+#########################################
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as mb
