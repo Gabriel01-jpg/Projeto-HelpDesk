@@ -111,5 +111,3 @@ class Produtos():
         except sqlite3.IntegrityError as err:
             print(f"Erro de integridade: {err}")
             return False
-
-
