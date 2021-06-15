@@ -8,6 +8,8 @@ from produtosView import produtosView
 
 class Main():
     def __init__(self, win):
+        win.resizable(False, False)
+        
         self.lblTitulo = tk.Label(win, text="Controle de Incidentes", font='Arial 20 bold')
         self.btnUsuarios = tk.Button(win, text="Usuários", command=self._openUsuarios)
         self.btnProdutos = tk.Button(win, text="Produtos", command=self._openProdutos)

@@ -9,7 +9,10 @@ from produtos import Produtos
 
 class produtosView:
     def __init__(self, win):
+        win.resizable(False, False)
+        
         self.produtosCRUD = Produtos()
+        self.win = win
 
         #Criando Elementos
         #Inserts
@@ -74,7 +77,7 @@ class produtosView:
         
         #Caso nome ou descriçãoo estejam vazios
         if nome == "" or descricao == "":
-            mb.showinfo("Mensagem", "Nome ou descrições vazias não são permitidas")
+            mb.showinfo("Mensagem", "Nome ou descrições vazias não são permitidas", parent=self.win)
             self.nomeEdit.focus_set()
         else:
             #Insere no banco e mostra a mensagem garantindo inserção
@@ -83,11 +86,11 @@ class produtosView:
                 self.produtosList.insert('', 'end', iid=(id+1), values=(str(id), nome, descricao))
                 self.nomeEdit.delete(0, tk.END)
                 self.descricaoEdit.delete("1.0", tk.END)
-                mb.showinfo("Mensagem", "Cadastro realizado com SUCESSO!")
+                mb.showinfo("Mensagem", "Cadastro realizado com SUCESSO!", parent=self.win)
                 self.nomeEdit.focus_set()
             #Caso erro aconteça na inserção
             else:
-                mb.showinfo("Mensagem", "Erro no cadastro")
+                mb.showinfo("Mensagem", "Erro no cadastro", parent=self.win)
                 self.nomeEdit.focus_set()
 
     def _on_alterar_clicked(self):
@@ -96,7 +99,7 @@ class produtosView:
         
         #Caso nome ou descriçãoo estejam vazios
         if len(linhaSelecionada) == 0:
-            mb.showinfo("Mensagem", "Nome ou descrições vazias não são permitidas")
+            mb.showinfo("Mensagem", "Nome ou descrições vazias não são permitidas", parent=self.win)
             self.nomeEdit.focus_set()
         else:
             id = self.produtosList.item(linhaSelecionada[0])['values'][0]
@@ -110,11 +113,11 @@ class produtosView:
 
                 self.nomeEdit.delete(0, tk.END)
                 self.descricaoEdit.delete("1.0", tk.END)
-                mb.showinfo("Mensagem", "Produto alterado com SUCESSO!")
+                mb.showinfo("Mensagem", "Produto alterado com SUCESSO!", parent=self.win)
                 self.nomeEdit.focus_set()
             #Caso erro aconteça na inserção
             else:
-                mb.showinfo("Mensagem", "Erro na alteração")
+                mb.showinfo("Mensagem", "Erro na alteração", parent=self.win)
                 self.nomeEdit.focus_set()
 
     def _on_excluir_clicked(self):
@@ -130,9 +133,9 @@ class produtosView:
                 self.descricaoEdit.delete("1.0", tk.END)
                 self.nomeEdit.focus_set()
 
-                mb.showinfo("Mensagem", "Exclusão realizada com SUCESSO!")
+                mb.showinfo("Mensagem", "Exclusão realizada com SUCESSO!", parent=self.win)
             else:
-                mb.showinfo("Mensagem", "Erro na exclusão")
+                mb.showinfo("Mensagem", "Erro na exclusão", parent=self.win)
 
 
 
