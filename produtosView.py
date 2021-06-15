@@ -10,10 +10,10 @@ class produtosView:
         #Criando Elementos
         #Inserts
         self.nomeLabel = tk.Label(win, text="Nome")
-        self.nomeEdit = tk.Entry(borderwidth="2")
+        self.nomeEdit = tk.Entry(win, borderwidth="2")
 
         self.descricaoLabel = tk.Label(win, text="Descrição")
-        self.descricaoEdit = tk.Text(borderwidth="2")
+        self.descricaoEdit = tk.Text(win, borderwidth="2")
         
         #TreeView
         self.produtosList = ttk.Treeview(win, columns=("Cod.", "Nome", "Descrição"), show='headings', selectmode="browse")

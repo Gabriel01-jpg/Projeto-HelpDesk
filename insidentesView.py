@@ -27,9 +27,9 @@ class IncidentesView:
         self.descricaoLabel = tk.Label(win, text='Descrição\n do \n problema:')
         self.statusLabel = tk.Label(win, text="Situação: ")
         self.solucaoLabel = tk.Label(win, text="Solução \n do \n problema: ", state=DISABLED)
-        self.chamadoEdit = tk.Entry(width=30, bd=3)
-        self.descricaoEdit = tk.Text(width=50, bd=3, )
-        self.solucaoEdit = tk.Text(width=50, bd=3, state=DISABLED)
+        self.chamadoEdit = tk.Entry(win, width=30, bd=3)
+        self.descricaoEdit = tk.Text(win, width=50, bd=3, )
+        self.solucaoEdit = tk.Text(win, width=50, bd=3, state=DISABLED)
         self.selecionarCliente = ttk.Combobox(win, width=45) 
         self.selecionarProduto = ttk.Combobox(win, width=45)
         self.selecaoTTK = 0
