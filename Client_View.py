@@ -16,27 +16,27 @@ class register_Client_View:
 
         #1
         self.lblNameClient = tk.Label(screen, text='NAME')
-        self.NameClientEdit = tk.Entry(width = 35, bd=2)
+        self.NameClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         #2
         self.lblLastName = tk.Label(screen, text="LAST NAME")
-        self.LastNameClientEdit = tk.Entry(width = 35, bd=2)
+        self.LastNameClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         #3
         self.lblCPFClient = tk.Label(screen, text="CPF")
-        self.CPFClientEdit = tk.Entry(width = 35, bd=2)
+        self.CPFClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         #4
         self.lblPhoneClient = tk.Label(screen, text="TELEFONE")
-        self.PhoneClientEdit = tk.Entry(width = 35, bd=2)
+        self.PhoneClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         #5
         self.lblEmailClient = tk.Label(screen, text="EMAIL")
-        self.EmailClientEdit = tk.Entry(width = 35, bd=2)
+        self.EmailClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         #6
         self.lblAdressClient = tk.Label(screen, text="ADRESS")
-        self.AdressClientEdit = tk.Entry(width = 35, bd=2)
+        self.AdressClientEdit = tk.Entry(screen, width = 35, bd=2)
 
         self.btnCadastrar = tk.Button(screen, text='Cadastrar', width = 10, command=self._on_cadastrar_clicked) 
         self.btnAlterar = tk.Button(screen, text='Alterar', width = 10, command=self._on_update_clicked) 
@@ -236,8 +236,8 @@ class register_Client_View:
 
 
 
-janela=tk.Tk()
+'''janela=tk.Tk()
 principal=register_Client_View(janela)
 janela.title('Cadastro de Cliente')
 janela.geometry("770x465+0+0")
-janela.mainloop()
+janela.mainloop()'''
