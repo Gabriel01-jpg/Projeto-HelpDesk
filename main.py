@@ -5,6 +5,7 @@
 import tkinter as tk
 from insidentesView import IncidentesView
 from produtosView import produtosView
+from Client_View import register_Client_View
 
 class Main():
     def __init__(self, win):
@@ -21,7 +22,11 @@ class Main():
         self.btnIncidentes.place(x=550, y=150, width=220, height=110)
         
     def _openUsuarios(self):
-        pass
+        janela=tk.Toplevel()
+        principal=register_Client_View(janela)
+        janela.title('Usuários')
+        janela.geometry("800x600+0+0")
+        janela.mainloop()
         
     def _openProdutos(self):
         janela=tk.Toplevel()
